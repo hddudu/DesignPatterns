@@ -2,22 +2,39 @@ package org.landy.template.method.jdbc;
 
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcTemplate {
 
+    private final static String URL = "jdbc:mysql://localhost:3306/test";
+    private final static String DRIVER = "com.mysql.jdbc.Driver";
+    private final static String USERNAME = "root";
+    private final static String PASSWORD = "123456";
+
     private DataSource dataSource;
+
+//    public JdbcTemplate(){
+//        try {
+//            Class driver = Class.forName(DRIVER);
+//        } catch (ClassNotFoundException e) {
+//            System.out.println("注册驱动失败.........");
+//            e.printStackTrace();
+//        }
+//    }
+
     public JdbcTemplate(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
     private Connection getConnection() throws  Exception{
-        return this.dataSource.getConnection();
+        if(dataSource != null) {
+            return this.dataSource.getConnection();
+        } else {
+            Class.forName(DRIVER);
+            return DriverManager.getConnection(URL,USERNAME,PASSWORD);
+        }
     }
 
     private PreparedStatement createPreparedStatement(Connection conn,String sql) throws  Exception{
@@ -26,8 +43,10 @@ public class JdbcTemplate {
 
 
     private ResultSet executeQuery(PreparedStatement pstmt,Object [] paramValues) throws  Exception{
-        for (int i = 0; i <paramValues.length; i ++){
-            pstmt.setObject(i,paramValues[i]);
+        if(paramValues != null) {
+            for (int i = 0; i < paramValues.length; i ++){
+                pstmt.setObject(i,paramValues[i]);
+            }
         }
         return  pstmt.executeQuery();
     }

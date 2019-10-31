@@ -48,4 +48,15 @@ public class User {
     public void setAddr(String addr) {
         this.addr = addr;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", age=" + age +
+                ", addr='" + addr + '\'' +
+                '}';
+    }
 }
